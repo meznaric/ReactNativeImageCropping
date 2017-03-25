@@ -9,6 +9,6 @@
     "TOCropViewController": "git+https://github.com/meznaric/TOCropViewController.git"
   },
   "peerDependencies": {
-    "react-native": "^0.28.0"
+    "react-native": "^0.40.0"
   }
 }
