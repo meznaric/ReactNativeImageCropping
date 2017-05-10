@@ -104,7 +104,7 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
 
     }
     else {
-        scaledImage = image
+        scaledImage = image;
     }
     
     UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
