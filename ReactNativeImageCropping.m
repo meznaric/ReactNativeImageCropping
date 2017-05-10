@@ -91,8 +91,8 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
     // hardcoded downsample of image
     float oldWidth = image.size.width;
     UIImage *scaledImage = image;
-    if (oldWidth > 600) {
-        float scaleFactor = 600 / oldWidth;
+    if (oldWidth > 800) {
+        float scaleFactor = 800 / oldWidth;
         
         float newHeight = image.size.height * scaleFactor;
         float newWidth = oldWidth * scaleFactor;
