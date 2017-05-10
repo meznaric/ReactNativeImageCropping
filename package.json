@@ -1,6 +1,6 @@
 {
   "name": "react-native-image-cropping",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "keywords": "react-native image cropping",
   "description": "Simple image cropping library for react-native.",
   "license": "MIT",

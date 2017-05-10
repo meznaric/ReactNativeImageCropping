@@ -90,18 +90,25 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
     
     // hardcoded downsample of image
     float oldWidth = image.size.width;
-    float scaleFactor = 600 / oldWidth;
-    
-    float newHeight = image.size.height * scaleFactor;
-    float newWidth = oldWidth * scaleFactor;
-    
-    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
-    [image drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
-    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    UIImage *scaledImage = nil;
+    if (oldWidth > 600) {
+        float scaleFactor = 600 / oldWidth;
+        
+        float newHeight = image.size.height * scaleFactor;
+        float newWidth = oldWidth * scaleFactor;
+        
+        UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
+        [image drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
+        scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+    }
+    else {
+        scaledImage = image
+    }
     
     UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
-    TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
+    TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:scaledImage];
     cropViewController.delegate = self;
     
     if(self.aspectRatio) {
