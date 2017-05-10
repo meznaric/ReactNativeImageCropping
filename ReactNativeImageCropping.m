@@ -90,7 +90,7 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
     
     // hardcoded downsample of image
     float oldWidth = image.size.width;
-    UIImage *scaledImage = nil;
+    UIImage *scaledImage = image;
     if (oldWidth > 600) {
         float scaleFactor = 600 / oldWidth;
         
@@ -102,9 +102,6 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
         scaledImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
 
-    }
-    else {
-        scaledImage = image;
     }
     
     UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
