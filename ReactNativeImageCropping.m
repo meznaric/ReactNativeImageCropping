@@ -88,8 +88,24 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
 
 - (void)handleImageLoad:(UIImage *)image {
     
+    // hardcoded downsample of image
+    float oldWidth = image.size.width;
+    UIImage *scaledImage = image;
+    if (oldWidth > 800) {
+        float scaleFactor = 800 / oldWidth;
+        
+        float newHeight = image.size.height * scaleFactor;
+        float newWidth = oldWidth * scaleFactor;
+        
+        UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
+        [image drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
+        scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+    }
+    
     UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
-    TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
+    TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:scaledImage];
     cropViewController.delegate = self;
     
     if(self.aspectRatio) {
@@ -113,10 +129,10 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
         [cropViewController dismissViewControllerAnimated:YES completion:nil];
     });
     
-    NSData *pngData = UIImagePNGRepresentation(image);
-    NSString *fileName = [NSString stringWithFormat:@"memegenerator-crop-%lf.png", [NSDate timeIntervalSinceReferenceDate]];
-    NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName]; //Add the file name)
-    [pngData writeToFile:filePath atomically:YES];
+    NSData *jpgData = UIImageJPEGRepresentation(image, 80);
+    NSString *fileName = [NSString stringWithFormat:@"resized-%lf.jpg", [NSDate timeIntervalSinceReferenceDate]];
+    NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
+    [jpgData writeToFile:filePath atomically:YES];
     NSNumber *width  = [NSNumber numberWithFloat:image.size.width];
     NSNumber *height = [NSNumber numberWithFloat:image.size.height];
     
