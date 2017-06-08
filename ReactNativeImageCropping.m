@@ -129,10 +129,10 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
         [cropViewController dismissViewControllerAnimated:YES completion:nil];
     });
     
-    NSData *pngData = UIImagePNGRepresentation(image);
-    NSString *fileName = [NSString stringWithFormat:@"memegenerator-crop-%lf.png", [NSDate timeIntervalSinceReferenceDate]];
-    NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName]; //Add the file name)
-    [pngData writeToFile:filePath atomically:YES];
+    NSData *jpgData = UIImageJPEGRepresentation(image, 80);
+    NSString *fileName = [NSString stringWithFormat:@"resized-%lf.jpg", [NSDate timeIntervalSinceReferenceDate]];
+    NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
+    [jpgData writeToFile:filePath atomically:YES];
     NSNumber *width  = [NSNumber numberWithFloat:image.size.width];
     NSNumber *height = [NSNumber numberWithFloat:image.size.height];
     
