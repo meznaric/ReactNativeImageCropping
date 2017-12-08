@@ -69,7 +69,7 @@ RCT_EXPORT_METHOD(  cropImageWithUrl:(NSString *)imageUrl
 }
 
 RCT_EXPORT_METHOD(  cropImageWithUrlAndJPGCompression:(NSString *)imageUrl
-                    compressionQuality:(NSNumber *)compressionQuality
+                    compressionQuality:(nonnull NSNumber *)compressionQuality
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject
                   
