@@ -7,6 +7,7 @@
 @property (nonatomic, strong) RCTPromiseRejectBlock _reject;
 @property (nonatomic, strong) RCTPromiseResolveBlock _resolve;
 @property TOCropViewControllerAspectRatio aspectRatio;
+@property NSNumber* compressionQuality;
 
 
 @end
@@ -54,6 +55,30 @@ RCT_EXPORT_METHOD(  cropImageWithUrl:(NSString *)imageUrl
     self._reject = reject;
     self._resolve = resolve;
     self.aspectRatio = NULL;
+    self.compressionQuality = NULL;
+
+    
+    NSURLRequest *imageUrlrequest = [NSURLRequest requestWithURL:[NSURL URLWithString:imageUrl]];
+    
+    [self.bridge.imageLoader loadImageWithURLRequest:imageUrlrequest callback:^(NSError *error, UIImage *image) {
+        if(error) reject(@"100", @"Failed to load image", error);
+        if(image) {
+            [self handleImageLoad:image];
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(  cropImageWithUrlAndJPGCompression:(NSString *)imageUrl
+                    compressionQuality:(nonnull NSNumber *)compressionQuality
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject
+                  
+                  )
+{
+    self._reject = reject;
+    self._resolve = resolve;
+    self.aspectRatio = NULL;
+    self.compressionQuality = compressionQuality;
     
     NSURLRequest *imageUrlrequest = [NSURLRequest requestWithURL:[NSURL URLWithString:imageUrl]];
     
@@ -74,6 +99,7 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
     self._reject = reject;
     self._resolve = resolve;
     self.aspectRatio = aspectRatio;
+    self.compressionQuality = NULL;
     
     NSURLRequest *imageUrlrequest = [NSURLRequest requestWithURL:[NSURL URLWithString:imageUrl]];
     
@@ -113,10 +139,19 @@ RCT_EXPORT_METHOD(cropImageWithUrlAndAspect:(NSString *)imageUrl
         [cropViewController dismissViewControllerAnimated:YES completion:nil];
     });
     
-    NSData *pngData = UIImagePNGRepresentation(image);
-    NSString *fileName = [NSString stringWithFormat:@"memegenerator-crop-%lf.png", [NSDate timeIntervalSinceReferenceDate]];
+    
+    NSData *imageRepData = NULL;
+    NSString *crop_file_name = @"memegenerator-crop-%lf.png";
+    if(self.compressionQuality != NULL){
+        imageRepData = UIImageJPEGRepresentation(image, self.compressionQuality.floatValue);
+        crop_file_name = @"memegenerator-crop-%lf.jpg";
+    }else{
+        imageRepData = UIImagePNGRepresentation(image);
+    }
+   
+    NSString *fileName = [NSString stringWithFormat:crop_file_name, [NSDate timeIntervalSinceReferenceDate]];
     NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName]; //Add the file name)
-    [pngData writeToFile:filePath atomically:YES];
+    [imageRepData writeToFile:filePath atomically:YES];
     NSNumber *width  = [NSNumber numberWithFloat:image.size.width];
     NSNumber *height = [NSNumber numberWithFloat:image.size.height];
     
