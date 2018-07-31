@@ -74,4 +74,13 @@ ReactNativeImageCropping
     err => console.log(b));
 ```
 
+#### Handling issue with control center
+When you have a large image, the top of the cropping region will trigger control center when you try to crop. To avoid this, set `View controller-based status bar appearance` in the `info.plist` to `YES`. Then, in the `AppDelegate.m`, change it to be: 
+
+```swift
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  [application setStatusBarHidden:YES]; //this restricts control center access throughout your app - users can still access it, but not as easily. 
+ ...
+```
 
